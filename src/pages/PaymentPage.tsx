@@ -14,6 +14,7 @@ import MpesaIcon from "../components/ui/MpesaIcon";
 import { ToastContainer } from "../components/ui/Toast";
 import { useToast } from "../hooks/useToast";
 import Layout from "../components/Layout";
+import SEO from "../components/SEO";
 import {
   searchSubscriberByIdNumber,
   initiatePublicPayment,
@@ -291,6 +292,40 @@ const PaymentPage = () => {
       background="bg-gradient-to-br from-primary-50 via-white to-secondary-50"
       contentClassName="pb-12 px-4 sm:px-6 lg:px-8"
     >
+      <SEO
+        title="Pay Okoa Familia Daily Premium - M-Pesa Payment"
+        description="Pay your Okoa Familia daily premium of KShs. 70 via M-Pesa. Quick and secure payment to keep your family health insurance active. Search by ID number and complete payment in minutes."
+        keywords="okoa familia payment, pay okoa familia, okoa familia mpesa, okoa familia daily payment, okoa familia premium payment, okoa familia pay online, okoa familia payment portal"
+        canonicalUrl="/pay"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Okoa Familia Payment",
+            description:
+              "Pay your Okoa Familia daily premium via M-Pesa. Secure payment portal for Okoa Familia insurance.",
+            url: "https://okoafamilia.innovasure.co.ke/pay",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://okoafamilia.innovasure.co.ke/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Payment",
+                item: "https://okoafamilia.innovasure.co.ke/pay",
+              },
+            ],
+          },
+        ]}
+      />
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
       <div className="max-w-xl mx-auto">
@@ -451,7 +486,7 @@ const PaymentPage = () => {
                 )}
 
                 {/* Member Info */}
-                <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-5 mb-6">
+                <div className="bg-linear-to-r from-primary-50 to-secondary-50 rounded-xl p-5 mb-6">
                   <div className="text-center">
                     <p className="text-sm text-gray-600 mb-1">Member Name</p>
                     <h3 className="text-lg font-bold text-gray-900 font-lexend">

@@ -29,14 +29,14 @@ const Footer = ({ variant = "full" }: FooterProps) => {
               <img
                 src="/innovasure.webp"
                 alt="Innovasure Logo"
-                className="h-full w-auto max-w-[200px] lg:max-w-[150px] object-contain "
+                className="h-full w-auto max-w-[200px] object-contain "
               />
             </div>
-            <div className="flex items-center justify-center h-16 lg:h-20 px-4 py-2">
+            <div className="flex items-center justify-center h-20 lg:h-24 px-4 py-2">
               <img
-                src="/birdview-logo.webp"
+                src="/birdview-logo.jpg"
                 alt="Birdview Logo"
-                className="h-full w-auto max-w-[200px] lg:max-w-[150px] object-cover "
+                className="h-full w-auto bg white max-w-[200px] object-cover "
               />
             </div>
             <div className="flex items-center justify-center h-16 lg:h-20 px-4 py-2">

@@ -4,6 +4,7 @@ import { TbArrowRight, TbCheck } from "react-icons/tb";
 import Layout from "../components/Layout";
 import { FiCheckCircle } from "react-icons/fi";
 import LaptopMockup from "../components/ui/LaptopMockup";
+import SEO from "../components/SEO";
 
 const LandingPage = () => {
   const benefits = [
@@ -13,7 +14,7 @@ const LandingPage = () => {
         "Matibabu bora ya hospitali - Comprehensive Inpatient & Outpatient cover",
     },
     {
-      title: "Ulinzi Bora kwa Watu Saba",
+      title: "Ulinzi Bora ya Watu Saba",
       description:
         "Protect yourself, spouse and up to 6 children all under one insurance cover",
     },
@@ -38,10 +39,66 @@ const LandingPage = () => {
     "Dependant information (spouse/children) - Name, D.O.B, Birth Certificate/ID Numbers",
   ];
 
+  // Structured data for landing page
+  const landingPageStructuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      serviceType: "Health Insurance",
+      name: "Okoa Familia Daily Premium Insurance",
+      description:
+        "Affordable daily family health insurance at KShs. 70 per day covering up to 7 family members",
+      provider: {
+        "@type": "Organization",
+        name: "Innovasure Limited",
+      },
+      areaServed: {
+        "@type": "Country",
+        name: "Kenya",
+      },
+      offers: {
+        "@type": "Offer",
+        name: "Okoa Familia Daily Premium",
+        price: "70",
+        priceCurrency: "KES",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "70",
+          priceCurrency: "KES",
+          unitText: "DAY",
+        },
+        availability: "https://schema.org/InStock",
+        url: "https://okoafamilia.innovasure.co.ke/register",
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://okoafamilia.innovasure.co.ke/",
+        },
+      ],
+    },
+  ];
+
   return (
     <Layout navbarVariant="full" footerVariant="full" background="bg-white">
+      <SEO
+        title="Okoa Familia - KShs. 70/day Affordable Daily Family Protection Cover"
+        description="Protect your family with Okoa Familia insurance at just KShs. 70 per day. Simple, affordable health coverage for Kenyan families covering up to 7 members. Register today and secure your loved ones with comprehensive medical cover."
+        keywords="okoa familia, okoa familia cover, okoa familia insurance, okoa familia kenya, affordable insurance kenya, daily insurance, family protection, KShs. 70 insurance, KES 70 insurance, health insurance kenya, micro insurance, innovasure, innovasure limited, innovasure kenya, innovasure limited kenya, innovasure okoa familia, family health insurance, affordable medical cover kenya, daily premium insurance, okoa familia registration, okoa familia payment, okoa familia login"
+        canonicalUrl="/"
+        structuredData={landingPageStructuredData}
+      />
       {/* Hero Section */}
-      <section className="relative pb-0 lg:pb-10 overflow-hidden">
+      <section
+        className="relative pb-0 lg:pb-10 overflow-hidden"
+        aria-label="Okoa Familia Hero Section"
+      >
         {/* Background gradient */}
         <div className="absolute inset-0 bg-linear-to-b from-white via-primary-50 to-white" />
 
@@ -127,7 +184,7 @@ const LandingPage = () => {
                 <div className="relative rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl overflow-hidden min-h-[200px] lg:max-h-[350px]">
                   <img
                     src="/bg.jpg"
-                    alt="Okoa Familia - Family Protection"
+                    alt="Okoa Familia - Affordable family health insurance in Kenya at KShs. 70 per day"
                     className="w-full h-full object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
@@ -196,7 +253,10 @@ const LandingPage = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-10 md:py-12 lg:py-14 bg-white">
+      <section
+        className="py-10 md:py-12 lg:py-14 bg-white"
+        aria-label="Okoa Familia Benefits"
+      >
         <div className="max-w-336 mx-auto px-4">
           <div className="text-center mb-6 md:mb-8 lg:mb-12">
             <h2 className="text-xl md:text-2xl lg:text-4xl font-extrabold font-google text-secondary-600 mb-4">
@@ -233,6 +293,7 @@ const LandingPage = () => {
       <section
         id="how-it-works"
         className="py-10 md:py-12 lg:py-14 px-4 sm:px-6 lg:px-8 bg-white"
+        aria-label="How to Join Okoa Familia"
       >
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -362,7 +423,10 @@ const LandingPage = () => {
       </section>
 
       {/* Requirements Section */}
-      <section className="pt-8 lg:py-24 bg-white">
+      <section
+        className="pt-8 lg:py-24 bg-white"
+        aria-label="Registration Requirements"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-6 lg:mb-10">
@@ -398,8 +462,10 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-10 md:py-12 lg:py-14 bg-linear-to-r from-primary-900 via-primary-800 to-secondary-900">
-      
+      <section
+        className="py-10 md:py-12 lg:py-14 bg-linear-to-r from-primary-900 via-primary-800 to-secondary-900"
+        aria-label="Call to Action - Join Okoa Familia"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl lg:text-4xl font-extrabold text-white font-google mb-4">
             Ready to Protect Your Family?

@@ -45,6 +45,7 @@ import { getPlans, InsurancePlan } from "../services/insurancePlansService";
 import api from "../services/api";
 import { useAuthStore } from "../store/authStore";
 import { checkPaymentStatus } from "../services/paymentService";
+import SEO from "../components/SEO";
 
 // Environment variables for Okoa Familia
 // Agent code MUST be set via environment variable - no fallback in production
@@ -667,6 +668,40 @@ const RegisterPage = () => {
       background="bg-gradient-to-br from-primary-50 via-white to-secondary-50"
       contentClassName="pb-12 px-4 sm:px-6 lg:px-8"
     >
+      <SEO
+        title="Register for Okoa Familia - Join Affordable Family Health Insurance"
+        description="Register for Okoa Familia and protect your family with affordable health insurance at just KShs. 70 per day. Complete registration in 4 simple steps. Cover up to 7 family members with comprehensive medical coverage."
+        keywords="okoa familia registration, register okoa familia, okoa familia sign up, okoa familia join, okoa familia insurance registration, okoa familia kenya registration, how to register okoa familia, okoa familia application"
+        canonicalUrl="/register"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: "Okoa Familia Registration",
+            description:
+              "Register for Okoa Familia affordable family health insurance. Complete your registration in 4 simple steps and protect up to 7 family members at just KShs. 70 per day.",
+            url: "https://okoafamilia.innovasure.co.ke/register",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://okoafamilia.innovasure.co.ke/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Register",
+                item: "https://okoafamilia.innovasure.co.ke/register",
+              },
+            ],
+          },
+        ]}
+      />
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
       <div className="max-w-2xl mx-auto">
@@ -714,7 +749,7 @@ const RegisterPage = () => {
 
         {/* Plan Info Banner */}
         {plan && (
-          <div className="mb-6 p-4 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-xl border border-primary-200">
+          <div className="mb-6 p-4 bg-linear-to-r from-primary-100 to-secondary-100 rounded-xl border border-primary-200">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Your Plan</p>
@@ -1247,7 +1282,7 @@ const RegisterPage = () => {
                 </div>
 
                 {/* Summary */}
-                <div className="mt-8 p-4 bg-gradient-to-r from-secondary-50 to-primary-50 rounded-xl border border-secondary-100">
+                <div className="mt-8 p-4 bg-linear-to-r from-secondary-50 to-primary-50 rounded-xl border border-secondary-100">
                   <h3 className="font-bold text-gray-900 mb-3 font-lexend">
                     Registration Summary
                   </h3>
@@ -1383,7 +1418,7 @@ const RegisterPage = () => {
                     <button
                       onClick={handleSTKPush}
                       disabled={paymentStatus !== "idle"}
-                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 lg:py-3.5 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 mb-6"
+                      className="w-full bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 lg:py-3.5 rounded-xl font-semibold text-base shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 mb-6"
                     >
                       <span>Pay KShs {paymentAmount.toLocaleString()}</span>
                       <TbArrowRight className="w-5 h-5" />
