@@ -1,7 +1,7 @@
 import { TbArrowBack, TbArrowRight } from "react-icons/tb";
 import { Link } from "react-router-dom";
 
-interface NavbarProps {
+export interface NavbarProps {
   variant?: "full" | "simple";
   maxWidth?: "default" | "narrow";
 }

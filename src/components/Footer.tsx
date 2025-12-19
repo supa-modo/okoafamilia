@@ -1,7 +1,7 @@
-import { TbShieldCheck, TbPhone } from "react-icons/tb";
+import { TbPhone } from "react-icons/tb";
 import { FaWhatsapp } from "react-icons/fa";
 
-interface FooterProps {
+export interface FooterProps {
   variant?: "full" | "simple";
 }
 
@@ -17,48 +17,54 @@ const Footer = ({ variant = "full" }: FooterProps) => {
   }
 
   return (
-    <footer className="bg-gray-900 py-12 lg:py-16">
+    <footer className="bg-gray-900 pt-10 lg:pt-12 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Partnership Logos */}
         <div className="text-center mb-10">
-          <p className="text-gray-400 text-sm mb-6">In Partnership With</p>
-          <div className="flex items-center justify-center gap-8 lg:gap-16 flex-wrap">
-            <div className="text-center">
-              <div className="h-10 lg:h-12 flex items-center justify-center mb-2">
-                <span className="text-xl lg:text-2xl font-bold text-white font-lexend">
-                  Innovasure
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">Platform Owner</p>
+          <p className="text-gray-400 font-google text-sm mb-6">
+            In Partnership With
+          </p>
+          <div className="flex items-center justify-center gap-6 lg:gap-12 flex-wrap">
+            <div className="flex items-center justify-center h-16 lg:h-20 px-4 py-2">
+              <img
+                src="/innovasure.webp"
+                alt="Innovasure Logo"
+                className="h-full w-auto max-w-[200px] lg:max-w-[150px] object-contain "
+              />
             </div>
-            <div className="text-center">
-              <div className="h-10 lg:h-12 flex items-center justify-center mb-2">
-                <span className="text-xl lg:text-2xl font-bold text-secondary-400 font-lexend">
-                  Birdview
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">Insurance Provider</p>
+            <div className="flex items-center justify-center h-16 lg:h-20 px-4 py-2">
+              <img
+                src="/birdview-logo.webp"
+                alt="Birdview Logo"
+                className="h-full w-auto max-w-[200px] lg:max-w-[150px] object-cover "
+              />
             </div>
-            <div className="text-center">
-              <div className="h-10 lg:h-12 flex items-center justify-center mb-2">
-                <span className="text-xl lg:text-2xl font-bold text-primary-400 font-lexend">
-                  Biashara Ndogo
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">On-Ground Agent</p>
+            <div className="flex items-center justify-center h-16 lg:h-20 px-4 py-2">
+              <img
+                src="/bnak.jpg"
+                alt="Biashara Ndogo Logo"
+                className="h-full w-auto max-w-[200px] object-contain "
+              />
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-gray-800 pt-6">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center">
-                <TbShieldCheck className="w-4 h-4 text-white" />
+              <div className="w-10 h-10 ">
+                <img
+                  src="/logo.webp"
+                  alt="Okoa Familia Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="text-white font-semibold font-lexend">
-                Okoa Familia
-              </span>
+              <div className="flex flex-col">
+                <h1 className="text-white font-extrabold font-google text-base lg:text-lg">
+                  Okoa Familia
+                </h1>
+                <p className="text-gray-400 text-xs -mt-1">by Innovasure</p>
+              </div>
             </div>
 
             <div className="flex items-center gap-6">
@@ -80,9 +86,20 @@ const Footer = ({ variant = "full" }: FooterProps) => {
               </a>
             </div>
 
-            <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()} Innovasure. All rights reserved.
-            </p>
+            <div className="flex flex-col items-center lg:items-end gap-2">
+              <p className="text-gray-500 text-sm">
+                &copy; {new Date().getFullYear()} Innovasure. All rights
+                reserved.
+              </p>
+              <a
+                href="https://innovasure.co.ke/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white text-sm transition-colors underline underline-offset-2"
+              >
+                Terms and Conditions
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -91,4 +108,3 @@ const Footer = ({ variant = "full" }: FooterProps) => {
 };
 
 export default Footer;
-
