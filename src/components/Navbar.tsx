@@ -8,7 +8,7 @@ export interface NavbarProps {
 
 const Navbar = ({ variant = "full", maxWidth = "default" }: NavbarProps) => {
   const maxWidthClass =
-    maxWidth === "narrow" ? "max-w-4xl" : "max-w-screen-2xl";
+    maxWidth === "narrow" ? "max-w-6xl" : "max-w-screen-2xl";
   const heightClass = variant === "full" ? "h-16 lg:h-20" : "h-16";
 
   return (

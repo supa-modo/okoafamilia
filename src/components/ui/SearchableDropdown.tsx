@@ -60,7 +60,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       {label && (
         <label
           htmlFor="dropdown"
-          className="block text-[0.83rem] lg:text-sm font-semibold text-gray-700 pl-1 mb-1 lg:mb-1.5"
+          className="block text-xs lg:text-sm font-google text-gray-600 pl-1 mb-1 lg:mb-1.5"
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
@@ -96,7 +96,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
           </div>
         </div>
         {isOpen && !disabled && (
-          <div className="absolute z-10 mt-1 w-full bg-white shadow-xl rounded-xl border border-gray-200 max-h-72 overflow-y-auto">
+          <div className="absolute z-9999 mt-1 w-full bg-white shadow-xl rounded-xl border border-gray-200 max-h-68 overflow-hidden">
             <div className="sticky top-0 p-2 bg-white border-b border-gray-200">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -112,24 +112,26 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
                 />
               </div>
             </div>
-            <ul className="py-1">
-              {filteredOptions.map((option) => (
-                <li key={option}>
-                  <button
-                    type="button"
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 transition-colors"
-                    onClick={() => handleSelect(option)}
-                  >
-                    {option}
-                  </button>
-                </li>
-              ))}
-              {filteredOptions.length === 0 && (
-                <li className="px-4 py-2 text-sm text-gray-500">
-                  No options found
-                </li>
-              )}
-            </ul>
+            <div className="max-h-54 overflow-y-auto">
+              <ul className="py-1">
+                {filteredOptions.map((option) => (
+                  <li key={option}>
+                    <button
+                      type="button"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 transition-colors"
+                      onClick={() => handleSelect(option)}
+                    >
+                      {option}
+                    </button>
+                  </li>
+                ))}
+                {filteredOptions.length === 0 && (
+                  <li className="px-4 py-2 text-sm text-gray-500">
+                    No options found
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
         )}
       </div>
@@ -144,4 +146,3 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
 };
 
 export default SearchableDropdown;
-

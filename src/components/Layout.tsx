@@ -29,14 +29,17 @@ const Layout = ({
       <Navbar variant={navbarVariant} maxWidth={navbarMaxWidth} />
 
       {/* Scrollable Content Area */}
-      <main className={`flex-1 overflow-y-auto ${paddingTop} ${contentClassName}`}>
-        {children}
+      <div className="overflow-y-auto">
+        <main
+          className={`flex-1 overflow-y-auto ${paddingTop} ${contentClassName}`}
+        >
+          {children}
+        </main>
         {/* Footer inside scrollable area */}
         <Footer variant={footerVariant} />
-      </main>
+      </div>
     </div>
   );
 };
 
 export default Layout;
-

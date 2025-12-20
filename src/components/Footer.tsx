@@ -1,4 +1,4 @@
-import { TbPhone } from "react-icons/tb";
+import { TbPhoneCall } from "react-icons/tb";
 import { FaWhatsapp } from "react-icons/fa";
 
 export interface FooterProps {
@@ -24,7 +24,7 @@ const Footer = ({ variant = "full" }: FooterProps) => {
           <p className="text-gray-400 font-google text-sm mb-6">
             In Partnership With
           </p>
-          <div className="flex items-center justify-center gap-6 lg:gap-12 flex-wrap">
+          <div className="flex items-center justify-center gap-0.5 md:gap-6 lg:gap-12 flex-wrap">
             <div className="flex items-center justify-center h-16 lg:h-20 px-4 py-2">
               <img
                 src="/innovasure.webp"
@@ -34,7 +34,7 @@ const Footer = ({ variant = "full" }: FooterProps) => {
             </div>
             <div className="flex items-center justify-center h-20 lg:h-24 px-4 py-2">
               <img
-                src="/birdview-logo.jpg"
+                src="/birdview-logo.webp"
                 alt="Birdview Logo"
                 className="h-full w-auto bg white max-w-[200px] object-cover "
               />
@@ -72,7 +72,7 @@ const Footer = ({ variant = "full" }: FooterProps) => {
                 href="tel:+254729622622"
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
               >
-                <TbPhone className="w-5 h-5" />
+                <TbPhoneCall className="w-5 h-5" />
                 <span className="text-sm">+254 729 622 622</span>
               </a>
               <a
@@ -86,7 +86,7 @@ const Footer = ({ variant = "full" }: FooterProps) => {
               </a>
             </div>
 
-            <div className="flex flex-col items-center lg:items-end gap-2">
+            <div className="flex flex-col font-google items-center lg:items-end gap-2">
               <p className="text-gray-500 text-sm">
                 &copy; {new Date().getFullYear()} Innovasure. All rights
                 reserved.
@@ -97,7 +97,7 @@ const Footer = ({ variant = "full" }: FooterProps) => {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white text-sm transition-colors underline underline-offset-2"
               >
-                Terms and Conditions
+                Terms & Conditions
               </a>
             </div>
           </div>

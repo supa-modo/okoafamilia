@@ -20,21 +20,21 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   title = "",
 }) => {
   const sizeClasses = {
-    small: "h-4 w-7",
-    default: "h-6 w-11",
-    large: "h-8 w-14",
+    small: "h-5 w-[2.2rem]",
+    default: "h-6 w-10",
+    large: "h-6 w-11",
   };
 
   const thumbSizeClasses = {
-    small: "h-3.5 w-3.5",
+    small: "h-4 w-4",
     default: "h-4 w-4",
-    large: "h-6 w-6",
+    large: "h-5 w-5",
   };
 
   const translateClasses = {
     small: checked ? "translate-x-4" : "translate-x-0.5",
     default: checked ? "translate-x-6" : "translate-x-1",
-    large: checked ? "translate-x-7" : "translate-x-1",
+    large: checked ? "translate-x-5" : "translate-x-1",
   };
 
   const variantClasses = {

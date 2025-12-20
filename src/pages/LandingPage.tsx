@@ -134,7 +134,7 @@ const LandingPage = () => {
                     <TbArrowRight className="w-5 h-5" />
                   </div>
                 </Link>
-                <Link to="/register " className="w-full">
+                <Link to="/pay" className="w-full">
                   <div className="flex items-center justify-center gap-2 px-6 lg:px-8 py-3 lg:py-3.5 text-sm lg:text-base font-semibold  text-tertiary-700 hover:text-white bg-transparent border-2 border-tertiary-700 hover:bg-tertiary-700 rounded-full transition-colors shadow-lg shadow-tertiary-500/25">
                     Lipia Daily Okoa Familia
                     <TbArrowRight className="w-5 h-5" />
@@ -259,7 +259,7 @@ const LandingPage = () => {
       >
         <div className="max-w-336 mx-auto px-4">
           <div className="text-center mb-6 md:mb-8 lg:mb-12">
-            <h2 className="text-xl md:text-2xl lg:text-4xl font-extrabold font-google text-secondary-600 mb-4">
+            <h2 className="text-xl md:text-2xl lg:text-4xl font-extrabold font-google text-gray-800 mb-4">
               What You Get with Okoa Familia
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto font-google text-[0.9rem] md:text-base lg:text-lg">
@@ -298,8 +298,8 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-10 lg:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold font-google text-gray-900 mb-2 lg:mb-4">
-              How to Join Okoa Familia
+          <h2 className="text-xl md:text-2xl lg:text-4xl font-extrabold font-google text-gray-800 mb-4">
+          How to Join Okoa Familia
             </h2>
             <p className="text-gray-800 leading-relaxed mx-auto font-google max-w-4xl text-base md:text-lg lg:text-xl">
               Jiandikishe Leo Chini ya dakika 5. Zero paper work, instant

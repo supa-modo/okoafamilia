@@ -20,6 +20,10 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
   roleData?: any;
+  member?: {
+    principal_number?: string;
+    [key: string]: any;
+  };
   subscription?: {
     id: string;
     [key: string]: any;
