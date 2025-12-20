@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbLoader2, TbTrash } from "react-icons/tb";
 import DateInput from "../components/ui/DateInput";
@@ -65,6 +65,7 @@ interface Dependant {
   relationship: string;
   date_of_birth: string;
   id_number?: string;
+  gender?: string;
   included: boolean;
 }
 
@@ -112,8 +113,20 @@ const RegisterPage = () => {
   const [mpesaReceiptNumber, setMpesaReceiptNumber] = useState<string | null>(
     null
   );
-  const [timerInterval, setTimerInterval] = useState<any>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  // Refs for polling interval and timeout (matching PaymentPage pattern)
+  const pollingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null
+  );
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const countdownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null
+  );
+
+  // Payment polling configuration (matching PaymentPage)
+  const PAYMENT_POLL_INTERVAL = 3000; // 3 seconds
+  const PAYMENT_MAX_ATTEMPTS = 20; // 1 minute total (20 * 3 seconds = 60 seconds)
 
   // Phone input hooks
   const phoneInput = usePhoneInput({
@@ -230,6 +243,7 @@ const RegisterPage = () => {
       relationship: "",
       date_of_birth: "",
       id_number: "",
+      gender: "",
       included: true,
     };
     setDependants([...dependants, newDependant]);
@@ -372,10 +386,17 @@ const RegisterPage = () => {
       const includedDependants = dependants
         .filter((d) => d.included)
         .map((d) => ({
-          full_names: d.name,
-          relationship: d.relationship,
-          date_of_birth: d.date_of_birth,
-          id_number: d.id_number || undefined,
+          full_name: d.name.trim(),
+          relationship: d.relationship as
+            | "spouse"
+            | "child"
+            | "parent"
+            | "sibling"
+            | "other",
+          date_of_birth: d.date_of_birth || undefined,
+          gender: d.gender || undefined,
+          id_number: d.id_number?.trim() || "",
+          is_covered: true, // All included dependants are covered
         }));
 
       // Ensure agent code is always from environment variable
@@ -409,8 +430,10 @@ const RegisterPage = () => {
         email: formData.email?.trim() || undefined,
         gender: formData.gender,
         date_of_birth: formData.date_of_birth,
-        county: formData.county,
-        town: formData.town?.trim() || undefined,
+        address: {
+          town: formData.town?.trim() || formData.county, // Use county as fallback if town is empty
+          county: formData.county,
+        },
         password: defaultPassword,
         next_of_kin: {
           name: formData.nok_name.trim(),
@@ -423,11 +446,12 @@ const RegisterPage = () => {
           includedDependants.length > 0 ? includedDependants : undefined,
         agent_code: agentCode,
         plan_id: plan.id,
-        initiate_payment: true,
-        payment_phone: normalizePhoneNumber(phoneInput.normalizedValue),
       };
 
       const response = await register(payload);
+
+      // Log full response for debugging
+      console.log("Registration response:", response);
 
       if (response.user && response.accessToken) {
         setAuth(response.user, response.accessToken, response.refreshToken);
@@ -436,8 +460,23 @@ const RegisterPage = () => {
         const subId = response.subscription?.id;
         const principalNum = (response as any).member?.principal_number;
 
+        // Validate that subscription was created
+        if (!subId) {
+          console.error(
+            "Registration succeeded but subscription ID is missing:",
+            response
+          );
+          showToast({
+            type: "error",
+            message:
+              "Registration completed but subscription was not created. Please contact support.",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
         // Store subscription ID and principal number for Step 3 (Activation)
-        setSubscriptionId(subId || null);
+        setSubscriptionId(subId);
         setPrincipalNumber(principalNum || null);
 
         // Set payment amount from plan
@@ -461,12 +500,56 @@ const RegisterPage = () => {
           type: "success",
           message: "Registration successful. Activate your plan to finish.",
         });
+      } else {
+        // Response structure is invalid
+        console.error("Invalid registration response structure:", response);
+        showToast({
+          type: "error",
+          message:
+            "Registration response is invalid. Please try again or contact support.",
+        });
       }
     } catch (error: any) {
-      console.error("Registration error:", error);
+      // Log full error details for debugging
+      console.error("Registration error:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        fullError: error,
+      });
+
+      // Extract user-friendly error message
+      let errorMessage = "Registration failed. Please try again.";
+
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.response?.data?.details) {
+        errorMessage = error.response.data.details;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      // Provide specific error messages for common issues
+      if (errorMessage.includes("phone number already exists")) {
+        errorMessage = "An account with this phone number already exists.";
+      } else if (errorMessage.includes("ID number already exists")) {
+        errorMessage = "An account with this ID number already exists.";
+      } else if (errorMessage.includes("Invalid agent code")) {
+        errorMessage = "Invalid agent code. Please contact support.";
+      } else if (errorMessage.includes("Agent is not active")) {
+        errorMessage =
+          "The agent account is not active. Please contact support.";
+      } else if (errorMessage.includes("Insurance plan not found")) {
+        errorMessage = "Selected insurance plan is not available.";
+      } else if (
+        errorMessage.includes("Member already has an active subscription")
+      ) {
+        errorMessage = "You already have an active subscription.";
+      }
+
       showToast({
         type: "error",
-        message: error.message || "Registration failed. Please try again.",
+        message: errorMessage,
       });
     } finally {
       setIsSubmitting(false);
@@ -479,26 +562,27 @@ const RegisterPage = () => {
     return /^\+254[0-9]{9}$/.test(normalized);
   };
 
-  // Start countdown timer for payment
-  const startCountdownTimer = () => {
-    if (timerInterval) {
-      clearInterval(timerInterval);
+  // Start countdown timer for payment (using refs)
+  const startCountdownTimer = useCallback(() => {
+    // Clear any existing countdown
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
     }
 
-    const interval = setInterval(() => {
+    setTimeRemaining(60);
+    countdownIntervalRef.current = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
-          clearInterval(interval);
-          setTimerInterval(null);
-          setPaymentStatus("timeout");
+          if (countdownIntervalRef.current) {
+            clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
+          }
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-
-    setTimerInterval(interval);
-  };
+  }, []);
 
   const formatTimeRemaining = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -506,7 +590,7 @@ const RegisterPage = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Handle STK Push payment initiation
+  // Handle STK Push payment initiation (matching PaymentPage pattern)
   const handleSTKPush = async () => {
     if (!subscriptionId) {
       setPaymentError(
@@ -533,6 +617,20 @@ const RegisterPage = () => {
       return;
     }
 
+    // Clear any existing polling interval and timeout
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
+
     setPaymentError(null);
     setPaymentStatus("processing");
 
@@ -543,18 +641,115 @@ const RegisterPage = () => {
         phoneNumber: normalizedPhone,
       });
 
-      const transactionId =
-        response.data.transactionId || response.data.paymentId;
-      if (transactionId) {
-        setPaymentStatus("waiting");
-        setTimeRemaining(60);
-        startCountdownTimer();
-        pollPaymentStatus(transactionId);
-      } else {
-        setPaymentStatus("error");
-        setPaymentError("Payment initialization failed. Please try again.");
+      const paymentId =
+        response.data.paymentId ||
+        response.data.transactionId ||
+        response.data.conversationId;
+      if (!paymentId) {
+        throw new Error("Payment ID not received");
       }
+
+      // Set up 60-second timeout to stop polling and show timeout state
+      timeoutRef.current = setTimeout(() => {
+        // Stop polling when timeout is reached
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
+        }
+        if (countdownIntervalRef.current) {
+          clearInterval(countdownIntervalRef.current);
+          countdownIntervalRef.current = null;
+        }
+        setPaymentStatus("timeout");
+      }, 60000); // 60 seconds = 60000ms
+
+      // Start countdown timer
+      setTimeRemaining(60);
+      startCountdownTimer();
+      setPaymentStatus("waiting");
+
+      // Poll at configured interval for configured max attempts
+      let attempts = 0;
+      pollingIntervalRef.current = setInterval(async () => {
+        attempts++;
+
+        try {
+          const statusResponse = await checkPaymentStatus(paymentId);
+
+          if (
+            statusResponse.status === "completed" ||
+            statusResponse.status === "success"
+          ) {
+            // Clear timeout and intervals if payment succeeds
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current);
+              pollingIntervalRef.current = null;
+            }
+            if (countdownIntervalRef.current) {
+              clearInterval(countdownIntervalRef.current);
+              countdownIntervalRef.current = null;
+            }
+            setPaymentStatus("success");
+            setMpesaReceiptNumber(
+              statusResponse.payment?.mpesa_transaction_id ||
+                statusResponse.payment?.mpesa_receipt ||
+                null
+            );
+          } else if (statusResponse.status === "failed") {
+            // Clear timeout and intervals if payment fails
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current);
+              pollingIntervalRef.current = null;
+            }
+            if (countdownIntervalRef.current) {
+              clearInterval(countdownIntervalRef.current);
+              countdownIntervalRef.current = null;
+            }
+            setPaymentStatus("error");
+            setPaymentError("Payment failed. Please try again.");
+          } else if (attempts >= PAYMENT_MAX_ATTEMPTS) {
+            // Stop polling after max attempts, but don't show timeout yet
+            // Let the timeout mechanism handle showing timeout state
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current);
+              pollingIntervalRef.current = null;
+            }
+            // Don't set status here - let timeout handle it
+          }
+        } catch (err) {
+          console.error("Error checking payment status:", err);
+          if (attempts >= PAYMENT_MAX_ATTEMPTS) {
+            // Stop polling after max attempts
+            if (pollingIntervalRef.current) {
+              clearInterval(pollingIntervalRef.current);
+              pollingIntervalRef.current = null;
+            }
+            // Don't set status here - let timeout handle it
+          }
+        }
+      }, PAYMENT_POLL_INTERVAL);
     } catch (error: any) {
+      // Clear timeout and intervals on error
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
+      }
       setPaymentStatus("error");
       setPaymentError(
         error.response?.data?.error ||
@@ -564,88 +759,43 @@ const RegisterPage = () => {
     }
   };
 
-  // Poll payment status
-  const pollPaymentStatus = async (paymentId: string) => {
-    const maxAttempts = 6; // 60 seconds at 10 second intervals
-    let attempts = 0;
-    let isPolling = true;
-
-    const poll = async () => {
-      if (!isPolling || attempts >= maxAttempts) {
-        if (timerInterval) {
-          clearInterval(timerInterval);
-          setTimerInterval(null);
-        }
-        return;
-      }
-
-      attempts++;
-      try {
-        const result = await checkPaymentStatus(paymentId);
-
-        if (result.success && result.status === "completed") {
-          isPolling = false;
-          setPaymentStatus("success");
-          setMpesaReceiptNumber(result.payment?.mpesa_transaction_id || null);
-          if (timerInterval) {
-            clearInterval(timerInterval);
-            setTimerInterval(null);
-          }
-        } else if (result.status === "failed") {
-          isPolling = false;
-          setPaymentStatus("error");
-          setPaymentError("Payment failed. Please try again.");
-          if (timerInterval) {
-            clearInterval(timerInterval);
-            setTimerInterval(null);
-          }
-        } else if (attempts < maxAttempts && isPolling) {
-          setTimeout(poll, 10000);
-        } else if (isPolling) {
-          isPolling = false;
-          setPaymentStatus("timeout");
-          if (timerInterval) {
-            clearInterval(timerInterval);
-            setTimerInterval(null);
-          }
-        }
-      } catch (error) {
-        console.error("Polling error:", error);
-        if (attempts < maxAttempts && isPolling) {
-          setTimeout(poll, 10000);
-        } else if (isPolling) {
-          isPolling = false;
-          setPaymentStatus("timeout");
-          if (timerInterval) {
-            clearInterval(timerInterval);
-            setTimerInterval(null);
-          }
-        }
-      }
-    };
-
-    poll();
-  };
-
   const handleTryAgain = () => {
+    // Clear all intervals and timeouts
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
     setPaymentStatus("idle");
     setPaymentError(null);
     setMpesaReceiptNumber(null);
     setTimeRemaining(60);
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      setTimerInterval(null);
-    }
   };
 
-  // Cleanup timer on unmount
+  // Cleanup intervals and timeouts on unmount
   useEffect(() => {
     return () => {
-      if (timerInterval) {
-        clearInterval(timerInterval);
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
       }
     };
-  }, [timerInterval]);
+  }, []);
 
   return (
     <Layout navbarVariant="simple" navbarMaxWidth="narrow" footerVariant="full">
@@ -1231,6 +1381,27 @@ const RegisterPage = () => {
                                           {errors[`dep_${index}_dob`]}
                                         </p>
                                       )}
+                                    </div>
+                                    <div>
+                                      <label className="block text-xs lg:text-sm font-google text-gray-600 mb-1">
+                                        Gender
+                                      </label>
+                                      <select
+                                        value={dep.gender || ""}
+                                        onChange={(e) =>
+                                          updateDependant(
+                                            dep.id,
+                                            "gender",
+                                            e.target.value
+                                          )
+                                        }
+                                        className="input-field text-sm lg:text-base"
+                                      >
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                      </select>
                                     </div>
                                     <div>
                                       <label className="block text-xs lg:text-sm font-google text-gray-600 mb-1">

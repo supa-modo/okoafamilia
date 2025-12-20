@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import {
-  TbCash,
   TbArrowRight,
   TbCheck,
   TbAlertCircle,
@@ -21,7 +20,13 @@ interface ActivationStepProps {
   subscriptionId: string | null;
   paymentAmount: number;
   paymentPhone: string;
-  paymentStatus: "idle" | "processing" | "waiting" | "success" | "error" | "timeout";
+  paymentStatus:
+    | "idle"
+    | "processing"
+    | "waiting"
+    | "success"
+    | "error"
+    | "timeout";
   timeRemaining: number;
   mpesaReceiptNumber: string | null;
   paymentError: string | null;
@@ -53,10 +58,9 @@ const ActivationStep = ({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="p-6 lg:p-8"
+      className="lg:p-2"
     >
-      <h2 className="text-xl font-bold text-gray-900 font-google mb-6 flex items-center gap-2">
-        <TbCash className="w-6 h-6 text-primary-600" />
+      <h2 className="text-base lg:text-lg font-bold text-secondary-700 font-google mb-2 md:mb-3 lg:mb-4 flex items-center gap-2">
         Activate Your Policy
       </h2>
 
@@ -146,14 +150,25 @@ const ActivationStep = ({
       )}
 
       {paymentStatus === "processing" && (
-        <div className="text-center py-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-[3px] border-primary-600 mx-auto mb-6" />
-          <h4 className="text-lg font-semibold text-gray-500 mb-2">
-            Processing Payment
-          </h4>
-          <p className="text-gray-500 text-sm">
-            Please wait while we process your payment...
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-2xl border border-white/20 p-6 md:p-8 lg:p-12 text-center">
+          <h3 className="text-lg lg:text-xl font-extrabold text-amber-700 mb-3 font-google">
+            Check Your Phone
+          </h3>
+          <p className="text-gray-600 mb-6 font-outfit">
+            An M-Pesa payment prompt has been sent to{" "}
+            <span className="font-semibold font-lexend text-gray-800">
+              {paymentPhoneInput.displayValue}
+            </span>
           </p>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 lg:p-4 mb-6">
+            <p className="text-sm text-yellow-800 font-outfit">
+              Please enter your M-Pesa PIN to complete the payment. This may
+              take a few seconds...
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-9 lg:h-10 w-9 lg:w-10 mb-2 border-b-2 border-primary-600"></div>
+          </div>
         </div>
       )}
 
@@ -193,10 +208,10 @@ const ActivationStep = ({
       )}
 
       {paymentStatus === "success" && (
-        <div className="flex flex-col items-center w-full">
-          <div className="relative w-16 h-16 sm:w-20 mb-3 rounded-full flex items-center justify-center">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center">
-              <TbCheck className="h-10 w-10 text-secondary-700" />
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-2xl border border-white/20 p-6 md:p-8 lg:p-10 text-center">
+          <div className="relative w-14 md:w-16 h-14 md:h-16 lg:w-18 lg:h-18 mb-3 lg:mb-4 rounded-full mx-auto flex items-center justify-center">
+            <div className="w-14 md:w-16 h-14 md:h-16 rounded-full flex items-center justify-center">
+              <TbCheck className="h-9 md:h-10 lg:h-11 w-9 md:w-10 lg:w-11 text-secondary-700" />
             </div>
             <motion.svg
               className="absolute inset-0 w-full h-full"
@@ -216,36 +231,32 @@ const ActivationStep = ({
               />
             </motion.svg>
           </div>
-
-          <h3 className="text-lg md:text-xl font-semibold text-secondary-700 mb-2">
+          <h3 className="text-lg lg:text-xl font-extrabold text-secondary-700 mb-3 font-google">
             Payment Successful!
           </h3>
+          <p className="text-gray-600 mb-4 lg:mb-6 text-sm lg:text-base font-outfit">
+            Your policy has been activated successfully!
+          </p>
 
+          {/* Payment Receipt */}
           {mpesaReceiptNumber && (
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <div className="flex items-center gap-2">
-                  <p className="text-xs font-sans text-gray-500">
-                    M-Pesa Receipt
-                  </p>
-                  <p className="text-base font-semibold text-secondary-700">
+            <div className="border border-gray-200 rounded-lg p-4 lg:p-5 mb-6 text-left">
+              <div className="space-y-3 text-sm font-outfit">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">M-Pesa Receipt:</span>
+                  <span className="font-semibold font-lexend text-secondary-700">
                     {mpesaReceiptNumber}
-                  </p>
+                  </span>
                 </div>
               </div>
             </div>
           )}
 
-          <p className="text-sm text-gray-600 mb-6 text-center">
-            Your policy has been activated successfully!
-          </p>
-
           <button
             onClick={onNavigateToPay}
-            className="w-full px-4 py-2.5 bg-primary-600 hover:bg-primary-700 rounded-full text-sm font-semibold text-white transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full px-8 py-2.5 lg:py-3 border border-primary-600 text-primary-600 text-[0.8rem] md:text-sm font-google font-semibold rounded-lg hover:bg-primary-50 transition-colors"
           >
             Continue to Payment Page
-            <TbArrowRight className="w-5 h-5" />
           </button>
         </div>
       )}
@@ -284,32 +295,29 @@ const ActivationStep = ({
       )}
 
       {paymentStatus === "timeout" && (
-        <div className="space-y-3">
-          <div className="text-center">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <TbAlertCircle className="w-14 h-14 text-amber-600" />
-            </div>
-            <h4 className="text-lg font-semibold text-amber-700 mb-4">
-              Payment Timeout
-            </h4>
-            <p className="text-gray-500 mb-4 text-sm font-normal">
-              The payment request has timed out. If you received an M-Pesa
-              confirmation message, the payment may have been processed. Please
-              check your payment history.
-            </p>
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-2xl border border-white/20 p-6 md:p-8 lg:p-10 text-center">
+          <div className="flex items-center justify-center mx-auto mb-2 lg:mb-4">
+            <TbAlertCircle className="w-11 md:w-12 lg:w-14 h-11 md:h-12 lg:h-14 text-amber-600" />
           </div>
+          <h3 className="text-lg lg:text-xl font-extrabold text-amber-700 mb-3 font-google">
+            Payment Timeout
+          </h3>
+          <p className="text-gray-600 mb-4 lg:mb-6 text-sm lg:text-base font-outfit">
+            If you received an M-Pesa confirmation message, the payment may have
+            been processed. Please check your payment history or try again.
+          </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <div className="flex flex-col gap-3">
             <button
               onClick={onTryAgain}
-              className="w-full flex justify-center items-center px-6 py-2.5 lg:py-3 border border-transparent rounded-full shadow-sm text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300"
+              className="w-full px-6 py-2.5 lg:py-3 bg-primary-600 text-white text-[0.8rem] md:text-sm font-google font-semibold rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
             >
-              <TbRefresh className="mr-3 h-5 w-5" />
-              Retry Payment
+              <TbArrowRight className="w-5 h-5 rotate-180" />
+              Try Again
             </button>
             <button
               onClick={onNavigateToPay}
-              className="w-full px-6 py-2.5 lg:py-3 border border-primary-600 rounded-full text-sm font-semibold text-primary-600 bg-white hover:bg-primary-50 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full px-6 py-2.5 lg:py-3 border border-primary-600 text-primary-600 text-[0.8rem] md:text-sm font-google font-semibold rounded-lg hover:bg-primary-50 transition-colors"
             >
               Go to Payment Page
             </button>
@@ -321,4 +329,3 @@ const ActivationStep = ({
 };
 
 export default ActivationStep;
-
