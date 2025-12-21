@@ -73,3 +73,4 @@ const LaptopMockup: React.FC<LaptopMockupProps> = ({
 
 export default LaptopMockup;
 
+
