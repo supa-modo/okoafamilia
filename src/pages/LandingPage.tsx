@@ -394,8 +394,7 @@ const LandingPage = () => {
                   </h3>
                 </div>
                 <p className="text-gray-700 leading-relaxed tracking-wide text-base lg:text-lg ml-0 lg:ml-20 xl:ml-24">
-                  Create your password, review all your information, and submit
-                  your registration. Pay KES 70 via M-Pesa to activate your
+                  Submit your registration and pay KShs. 70 via M-Pesa to activate your
                   policy. Once completed, you'll receive instant confirmation
                   and your affordable health insurance policy will be active
                   immediately. Your whole family is now protected!
