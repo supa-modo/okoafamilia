@@ -151,14 +151,26 @@ const RegisterPage = () => {
   useEffect(() => {
     const savedData = loadFormData("REGISTER");
     if (savedData) {
-      if (savedData.formData) {
+      // Only restore if saved data has meaningful form data
+      if (
+        savedData.formData &&
+        (savedData.formData.full_name ||
+          savedData.formData.phone ||
+          savedData.formData.id_number)
+      ) {
         setFormData(savedData.formData);
-        phoneInput.setValue(savedData.formData.phone || "");
-        nokPhoneInput.setValue(savedData.formData.nok_phone || "");
+        // Restore phone inputs after formData is set
+        if (savedData.formData.phone) {
+          phoneInput.setValue(savedData.formData.phone || "");
+        }
+        if (savedData.formData.nok_phone) {
+          nokPhoneInput.setValue(savedData.formData.nok_phone || "");
+        }
       }
       if (savedData.dependants) {
         setDependants(savedData.dependants);
       }
+      // Only restore step if it's before step 3 (registration not completed)
       if (savedData.currentStep && savedData.currentStep < 3) {
         setCurrentStep(savedData.currentStep);
       }
@@ -178,12 +190,20 @@ const RegisterPage = () => {
 
   // Save form data on changes
   useEffect(() => {
-    const sanitized = sanitizeFormData(formData);
-    saveFormData("REGISTER", {
-      formData: sanitized,
-      dependants,
-      currentStep,
-    });
+    // Don't save if we're on step 3 (registration already completed)
+    if (currentStep === 3) {
+      return;
+    }
+
+    // Only save if form has actual data (at least one field filled)
+    if (formData.full_name || formData.phone || formData.id_number) {
+      const sanitized = sanitizeFormData(formData);
+      saveFormData("REGISTER", {
+        formData: sanitized,
+        dependants,
+        currentStep,
+      });
+    }
   }, [formData, dependants, currentStep]);
 
   const fetchPlan = async () => {

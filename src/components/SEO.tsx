@@ -12,7 +12,8 @@ interface SEOProps {
 }
 
 const baseUrl = "https://okoafamilia.innovasure.co.ke";
-const defaultTitle = "Okoa Familia - KShs. 70/day Affordable Daily Family Protection Cover";
+const defaultTitle =
+  "Okoa Familia - KShs. 70/day Affordable Daily Family Protection Cover";
 const defaultDescription =
   "Protect your family with Okoa Familia insurance at just KShs. 70 per day. Simple, affordable health coverage for Kenyan families. Register today and secure your loved ones.";
 const defaultKeywords =
@@ -28,9 +29,12 @@ const SEO = ({
   noindex = false,
   structuredData = [],
 }: SEOProps) => {
-  const fullTitle = title.includes("Okoa Familia") ? title : `${title} | Okoa Familia`;
-  const fullCanonicalUrl =
-    canonicalUrl.startsWith("http") ? canonicalUrl : `${baseUrl}${canonicalUrl}`;
+  const fullTitle = title.includes("Okoa Familia")
+    ? title
+    : `${title} | Okoa Familia`;
+  const fullCanonicalUrl = canonicalUrl.startsWith("http")
+    ? canonicalUrl
+    : `${baseUrl}${canonicalUrl}`;
 
   // Default Organization structured data
   const defaultStructuredData = [
@@ -54,6 +58,11 @@ const SEO = ({
         "https://www.facebook.com/innovasure",
         "https://twitter.com/innovasure",
       ],
+      parentOrganization: {
+        "@type": "Organization",
+        name: "Innovasure Limited",
+        url: "https://innovasure.co.ke",
+      },
     },
     {
       "@context": "https://schema.org",
@@ -92,7 +101,8 @@ const SEO = ({
       offers: {
         "@type": "Offer",
         name: "Okoa Familia Daily Premium",
-        description: "Affordable daily family health insurance at KShs. 70 per day",
+        description:
+          "Affordable daily family health insurance at KShs. 70 per day",
         price: "70",
         priceCurrency: "KES",
         availability: "https://schema.org/InStock",
@@ -136,7 +146,10 @@ const SEO = ({
       <meta property="og:image" content={ogImage} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="Okoa Familia - Affordable Family Health Insurance" />
+      <meta
+        property="og:image:alt"
+        content="Okoa Familia - Affordable Family Health Insurance"
+      />
       <meta property="og:site_name" content="Okoa Familia" />
       <meta property="og:locale" content="en_KE" />
 
@@ -146,12 +159,18 @@ const SEO = ({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
-      <meta name="twitter:image:alt" content="Okoa Familia - Affordable Family Health Insurance" />
+      <meta
+        name="twitter:image:alt"
+        content="Okoa Familia - Affordable Family Health Insurance"
+      />
 
       {/* Additional Meta Tags */}
       <meta name="theme-color" content="#ea580c" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      <meta name="mobile-web-app-capable" content="yes" />
+      <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+      />
       <meta name="apple-mobile-web-app-title" content="Okoa Familia" />
 
       {/* Structured Data (JSON-LD) */}
@@ -167,4 +186,3 @@ const SEO = ({
 };
 
 export default SEO;
-
