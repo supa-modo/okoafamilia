@@ -820,8 +820,8 @@ const RegisterPage = () => {
   return (
     <Layout navbarVariant="simple" navbarMaxWidth="narrow" footerVariant="full">
       <SEO
-        title="Register for Okoa Familia - Join Affordable Family Health Insurance"
-        description="Register for Okoa Familia and protect your family with affordable health insurance at just KShs. 70 per day. Complete registration in 3 simple steps. Cover up to 7 family members with comprehensive medical coverage."
+        title="Apply for Okoa Familia Cover - Affordable Family Health Insurance"
+        description="Apply for Okoa Familia and protect your family with affordable health insurance at just KShs. 70 per day. Complete registration in 3 simple steps. Cover up to 7 family members with comprehensive medical coverage."
         keywords="okoa familia registration, register okoa familia, okoa familia sign up, okoa familia join, okoa familia insurance registration, okoa familia kenya registration, how to register okoa familia, okoa familia application"
         canonicalUrl="/register"
         structuredData={[
@@ -905,7 +905,7 @@ const RegisterPage = () => {
                     />
                   </div>
                   <p className="text-white/90 text-xl md:text-2xl lg:text-3xl font-bold text-shadow">
-                    Member Onboarding
+                    Apply for Insurance
                   </p>
                 </div>
 
