@@ -905,7 +905,7 @@ const RegisterPage = () => {
                     />
                   </div>
                   <p className="text-white/90 text-xl md:text-2xl lg:text-3xl font-bold text-shadow">
-                    Apply for Insurance
+                    Apply for Insurance Coverage
                   </p>
                 </div>
 
