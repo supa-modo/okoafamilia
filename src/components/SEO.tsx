@@ -24,7 +24,7 @@ const SEO = ({
   description = defaultDescription,
   keywords = defaultKeywords,
   canonicalUrl = "/",
-  ogImage = `${baseUrl}/logo.webp`,
+  ogImage = `${baseUrl}/logo2.webp`,
   ogType = "website",
   noindex = false,
   structuredData = [],
@@ -144,8 +144,8 @@ const SEO = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      <meta property="og:image:width" content="300" />
+      <meta property="og:image:height" content="300" />
       <meta
         property="og:image:alt"
         content="Okoa Familia - Affordable Family Health Insurance"
