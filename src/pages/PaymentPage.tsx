@@ -6,7 +6,6 @@ import {
   TbCheck,
   TbAlertCircle,
   TbArrowRight,
-  TbLoader2,
   TbId,
   TbPhoneCall,
   TbShieldCheckFilled,
@@ -545,7 +544,7 @@ const PaymentPage = () => {
                   >
                     {loading ? (
                       <>
-                        <TbLoader2 className="w-5 h-5 animate-spin" />
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-[3px] border-primary-600"></div>
                         Searching...
                       </>
                     ) : (
@@ -840,7 +839,7 @@ const PaymentPage = () => {
                   >
                     {loading ? (
                       <>
-                        <TbLoader2 className="w-5 h-5 animate-spin" />
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-[3px] border-primary-600"></div>
                         Processing...
                       </>
                     ) : (

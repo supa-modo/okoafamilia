@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiX } from "react-icons/fi";
-import { TbCheck, TbLoader2, TbAlertCircle, TbCalendarAuto } from "react-icons/tb";
+import { TbCheck, TbAlertCircle, TbCalendarDot } from "react-icons/tb";
 import { setupRatiba } from "../services/ratibaService";
 
 interface RatibaSetupModalProps {
@@ -86,7 +86,7 @@ const RatibaSetupModal: React.FC<RatibaSetupModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100000] p-4"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-100000 p-4"
           onClick={handleBackdropClick}
         >
           <motion.div
@@ -98,7 +98,7 @@ const RatibaSetupModal: React.FC<RatibaSetupModalProps> = ({
           >
             <div className="px-4 lg:px-6 py-4 flex items-start justify-between gap-4">
               <div className="flex items-center gap-2 min-w-0">
-                <TbCalendarAuto className="w-6 h-6 text-primary-600 flex-shrink-0" />
+                <TbCalendarDot className="w-6 h-6 text-primary-600 shrink-0" />
                 <h3 className="text-lg font-semibold text-gray-800">
                   Set Up Automatic Payments
                 </h3>
@@ -164,7 +164,7 @@ const RatibaSetupModal: React.FC<RatibaSetupModalProps> = ({
 
               {status === "loading" && (
                 <div className="py-8 flex flex-col items-center">
-                  <TbLoader2 className="w-12 h-12 text-primary-600 animate-spin mb-4" />
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-[3px] border-primary-600 mb-4"></div>
                   <p className="text-sm text-gray-600 text-center">
                     Setting up automatic payments… You may receive a PIN prompt on your phone.
                   </p>
@@ -194,7 +194,7 @@ const RatibaSetupModal: React.FC<RatibaSetupModalProps> = ({
               {status === "error" && (
                 <div className="py-6">
                   <div className="flex items-center gap-2 mb-3 text-red-600">
-                    <TbAlertCircle className="w-6 h-6 flex-shrink-0" />
+                    <TbAlertCircle className="w-6 h-6 shrink-0" />
                     <h4 className="font-semibold">Setup Failed</h4>
                   </div>
                   <p className="text-sm text-gray-600 mb-5">{errorMessage}</p>

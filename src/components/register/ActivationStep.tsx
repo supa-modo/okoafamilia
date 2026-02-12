@@ -4,7 +4,6 @@ import {
   TbArrowRight,
   TbCheck,
   TbAlertCircle,
-  TbLoader2,
   TbRefresh,
 } from "react-icons/tb";
 import MpesaIcon from "../ui/MpesaIcon";
@@ -187,7 +186,7 @@ const ActivationStep = ({
 
       {paymentStatus === "waiting" && (
         <div className="flex flex-col items-center py-6 w-full">
-          <TbLoader2 className="w-10 h-10 text-slate-400 animate-spin mb-2" />
+          <div className="animate-spin rounded-full h-10 w-10 border-b-[3px] border-slate-400 mb-2"></div>
 
           <div className="max-w-xl">
             <p className="text-sm sm:text-base text-center text-gray-600 mb-3">

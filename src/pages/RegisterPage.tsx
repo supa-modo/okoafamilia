@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { TbLoader2, TbTrash } from "react-icons/tb";
+import { TbTrash } from "react-icons/tb";
 import DateInput from "../components/ui/DateInput";
 import SearchableDropdown from "../components/ui/SearchableDropdown";
 import ToggleSwitch from "../components/ui/ToggleSwitch";
@@ -1495,7 +1495,7 @@ const RegisterPage = () => {
                         >
                           {isSubmitting ? (
                             <>
-                              <TbLoader2 className="w-5 h-5 animate-spin inline mr-2" />
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-[3px] border-primary-600 inline mr-2"></div>
                               Registering...
                             </>
                           ) : (
