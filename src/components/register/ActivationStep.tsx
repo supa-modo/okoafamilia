@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   TbArrowRight,
@@ -7,6 +8,7 @@ import {
   TbRefresh,
 } from "react-icons/tb";
 import MpesaIcon from "../ui/MpesaIcon";
+import RatibaSetupModal from "../RatibaSetupModal";
 
 interface UsePhoneInputReturn {
   displayValue: string;
@@ -21,12 +23,12 @@ interface ActivationStepProps {
   paymentAmount: number;
   paymentPhone: string;
   paymentStatus:
-    | "idle"
-    | "processing"
-    | "waiting"
-    | "success"
-    | "error"
-    | "timeout";
+  | "idle"
+  | "processing"
+  | "waiting"
+  | "success"
+  | "error"
+  | "timeout";
   timeRemaining: number;
   mpesaReceiptNumber: string | null;
   paymentError: string | null;
@@ -52,6 +54,17 @@ const ActivationStep = ({
   onNavigateToPay,
   formatTimeRemaining,
 }: ActivationStepProps) => {
+  const [showRatibaModal, setShowRatibaModal] = useState(false);
+
+  useEffect(() => {
+    if (paymentStatus === "success") {
+      setShowRatibaModal(true);
+    }
+  }, [paymentStatus]);
+
+  const normalizedPhone =
+    paymentPhoneInput.normalizedValue || paymentPhoneInput.displayValue || "";
+
   return (
     <motion.div
       key="step3"
@@ -208,57 +221,71 @@ const ActivationStep = ({
       )}
 
       {paymentStatus === "success" && (
-        <div className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-2xl border border-white/20 p-6 md:p-8 lg:p-10 text-center">
-          <div className="relative w-14 md:w-16 h-14 md:h-16 lg:w-18 lg:h-18 mb-3 lg:mb-4 rounded-full mx-auto flex items-center justify-center">
-            <div className="w-14 md:w-16 h-14 md:h-16 rounded-full flex items-center justify-center">
-              <TbCheck className="h-9 md:h-10 lg:h-11 w-9 md:w-10 lg:w-11 text-secondary-700" />
+        <>
+          {subscriptionId && (
+            <RatibaSetupModal
+              isOpen={showRatibaModal}
+              onClose={() => setShowRatibaModal(false)}
+              subscriptionId={subscriptionId}
+              phoneNumber={normalizedPhone}
+              dailyPremiumAmount={paymentAmount}
+              startDateDisplay="Tomorrow"
+              endDateDisplay="Policy end date (366 days)"
+              onSuccess={() => setShowRatibaModal(false)}
+            />
+          )}
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl shadow-2xl border border-white/20 p-6 md:p-8 lg:p-10 text-center">
+            <div className="relative w-14 md:w-16 h-14 md:h-16 lg:w-18 lg:h-18 mb-3 lg:mb-4 rounded-full mx-auto flex items-center justify-center">
+              <div className="w-14 md:w-16 h-14 md:h-16 rounded-full flex items-center justify-center">
+                <TbCheck className="h-9 md:h-10 lg:h-11 w-9 md:w-10 lg:w-11 text-secondary-700" />
+              </div>
+              <motion.svg
+                className="absolute inset-0 w-full h-full"
+                viewBox="0 0 100 100"
+              >
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="47"
+                  fill="none"
+                  stroke="#16a34a"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                />
+              </motion.svg>
             </div>
-            <motion.svg
-              className="absolute inset-0 w-full h-full"
-              viewBox="0 0 100 100"
-            >
-              <motion.circle
-                cx="50"
-                cy="50"
-                r="47"
-                fill="none"
-                stroke="#16a34a"
-                strokeWidth="4"
-                strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-              />
-            </motion.svg>
-          </div>
-          <h3 className="text-lg lg:text-xl font-extrabold text-secondary-700 mb-3 font-google">
-            Payment Successful!
-          </h3>
-          <p className="text-gray-600 mb-4 lg:mb-6 text-sm lg:text-base font-outfit">
-            Your policy has been activated successfully!
-          </p>
+            <h3 className="text-lg lg:text-xl font-extrabold text-secondary-700 mb-3 font-google">
+              Payment Successful!
+            </h3>
+            <p className="text-gray-600 mb-4 lg:mb-6 text-sm lg:text-base font-outfit">
+              Your policy has been activated successfully!
+            </p>
 
-          {/* Payment Receipt */}
-          {mpesaReceiptNumber && (
-            <div className="border border-gray-200 rounded-lg p-4 lg:p-5 mb-6 text-left">
-              <div className="space-y-3 text-sm font-outfit">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">M-Pesa Receipt:</span>
-                  <span className="font-semibold font-lexend text-secondary-700">
-                    {mpesaReceiptNumber}
-                  </span>
+            {/* Payment Receipt */}
+            {mpesaReceiptNumber && (
+              <div className="border border-gray-200 rounded-lg p-4 lg:p-5 mb-6 text-left">
+                <div className="space-y-3 text-sm font-outfit">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">M-Pesa Receipt:</span>
+                    <span className="font-semibold font-lexend text-secondary-700">
+                      {mpesaReceiptNumber}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <button
-            onClick={onNavigateToPay}
-            className="w-full px-8 py-2.5 lg:py-3 border border-primary-600 text-primary-600 text-[0.8rem] md:text-sm font-google font-semibold rounded-lg hover:bg-primary-50 transition-colors"
-          >
-            Continue to Payment Page
-          </button>
-        </div>
+            <button
+              onClick={onNavigateToPay}
+              className="w-full px-8 py-2.5 lg:py-3 border border-primary-600 text-primary-600 text-[0.8rem] md:text-sm font-google font-semibold rounded-lg hover:bg-primary-50 transition-colors"
+            >
+              Continue to Payment Page
+            </button>
+          </div>
+        </>
       )}
 
       {paymentStatus === "error" && (
